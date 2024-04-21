@@ -65,7 +65,9 @@
     //          1.mp3 --> Reach boundary
     //          2.mp3 --> Found a heart
     //          3.mp3 --> Win
-    
+    const audio1 = new Audio('audio/1.mp3');
+    const audio2 = new Audio('audio/2.mp3');
+    const audio3 = new Audio('audio/3.mp3');
 
     app.component({
         data: () => ({
@@ -81,14 +83,46 @@
                 // TODO(7): If heading is not undefined, increase step count
                 //          Move the player and pan the map
                 //          Prevent moving out of bounds
-                
+                if (heading != undefined) {
+                    this.step++;
+
+                    let p = this.player.position;
+                    p = gm.geometry.spherical.computeOffset(p, MOVEMENT, heading);
+
+                    if (this.bounds.contains(p)) {
+                        this.player.setPosition(p);
+                        map.setCenter(p);
+                    }
+                    else {
+                        audio1.play();
+                    }
+                }
 
                 // TODO(4A): Update marker's distance and visibility
-                
+                for (const m of this.markers.filter(m => !m.found)) {
+                    const a = this.player.position;
+                    const b = m.position;
+                    m.distance = gm.geometry.spherical.computeDistanceBetween(a, b);
+
+                    // TODO(4B): Set visibility
+                    if (m.distance < 10) {
+                        audio2.play();
+                        m.found = true;
+                        m.setVisible(false);
+                    }
+                }
 
                 // TODO(9): If all markers (hearts) found, alert and reload
                 //          You found all hearts ❤️ in XXX steps!!!
-                
+                if (this.markers.every(m => m.found)) {
+                    this.win = true;
+                    audio3.play();
+
+                    setTimeout(_ => {
+                        alert(`You found all hearts ❤️ in ${this.step} steps!!!`);
+                        this.$router.push('/').then(_ => this.$router.go(-1));
+                    }, 1000);
+                }
             },
         },
 
@@ -114,11 +148,16 @@
                 clickableIcons: false,
                 fullscreenControl: true,
                 // TODO(1): Disable keyboard shortcuts 
-                
+                keyboardShortcuts: false,
                 // TODO(10A): Disable gesture handling (zoom, pan, etc)
-                
+                gestureHandling: 'nonex',
                 // TODO(10B): Set restriction bounds
-                
+                restriction: {
+                    latLngBounds: computeBounds(center, DISTANCE + 40),
+                    strictBounds: true,
+                },
+                maxZoom: 18,
+                minZoom: 18,
             });
 
             const panel = $('#panel')[0];
@@ -135,7 +174,7 @@
             this.player = player; // Vue data reference
 
             // TODO(2A): Calculate bounds and draw rectangle
-            const bounds = new gm.LatLngBounds();
+            const bounds = computeBounds(center, DISTANCE);
 
             this.bounds = bounds; // Vue data reference
 
@@ -146,14 +185,23 @@
                 strokeWeight: 10,
                 fillOpacity: 0,
                 // TODO(2B): Make the rectangle non-clickable (different cursor)
-
+                clickable: false,
             });
 
             gm.event.addListenerOnce(map, 'bounds_changed', e => {
                 const colors = ['red', 'green', 'blue'];
 
                 // TODO(3): Drop markers (hearts) on map within the bounds (random position)
-                
+                const sw = bounds.getSouthWest();
+                const sp = bounds.toSpan();
+
+                for (const c of colors) {
+                    const p = new gm.LatLng(
+                        sw.lat() + sp.lat() * Math.random(),
+                        sw.lng() + sp.lng() * Math.random()
+                    );
+                    addMarker(p, c);
+                }
 
                 // Call move() to calculate initial distances
                 this.move();
@@ -175,7 +223,16 @@
 
                 m.addListener('click', e => {
                     // TODO(5): Open info window for 3 seconds
-                    
+                    info.setContent(`
+                        <div id="info">
+                            This is the <b>${m.color}</b> heart.<br>
+                            It is <b>${m.distance.toFixed()}</b> meters away.
+                        </div>
+                    `);
+                    info.open(map, m);
+
+                    clearTimeout(timeout);
+                    timeout = setTimeout(_ => info.close(), 3000);
                 });
 
                 this.markers.push(m);
@@ -188,13 +245,22 @@
             //                     ArrowRight = east  ( 90)
             //                     ArrowDown  = south (180)
             //                     ArrowLeft  = west  (270)
-            
+            $(document).keydown(e => {
+                if (this.win) return;
+
+                switch (e.key) {
+                    case 'ArrowUp'   : this.move(  0); break;
+                    case 'ArrowRight': this.move( 90); break;
+                    case 'ArrowDown' : this.move(180); break;
+                    case 'ArrowLeft' : this.move(270); break;
+                }
+            });
         },
 
         unmounted() {
             map = null;
             // TODO(6B): Remove DOM event handlers
-
+            $(document).off('keydown');
         },
     });
 </script>
