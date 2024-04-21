@@ -1,0 +1,88 @@
+﻿====================================
+🗺️ EWT-20 Google Maps JS API (E) 🗺️
+====================================
+
+Data files = EWT-20.zip
+
+-------------------------------
+(E) Demo 12 - HTML5 Geolocation
+    Demo 13 - Mini Game
+-------------------------------
+
+
+---------------------------
+Demo 12 : HTML5 Geolocation
+---------------------------
+- Desktop & laptop = based on IP address
+- Mobile = based on GPS
+*** Only on HTTPS (except localhost or 127.0.0.1) ***
+
+- Methods:
+  (a) navigator.geolocation.getCurrentPosition(success, fail, options)
+      *** Called 1 time ***
+
+  (b) id = navigator.geolocation.watchPosition(success, fail, options)
+      navigator.geolocation.clearWatch(id)
+      *** Called everytime possition changed ***
+
+- PositionOptions (default):
+  - enableHighAccuracy = false
+  - timeout = Infinity
+  - maximumAge = 0
+
+- GeolocationPosition:
+  - coords.latitude
+  - coords.longitude
+  - coords.accuracy 
+  - coords.altitude (X)
+  - coords.altitudeAccuracy (X)
+  - coords.heading (X)
+  - coords.speed (X)
+  - timestamp
+
+- GeolocationPositionError:
+  - code --> 1 PERMISSION_DENIED
+             2 POSITION_UNAVAILABLE
+             3 TIMEOUT
+  - message
+
+
+-------------------
+Demo 13 : Mini Game
+-------------------
+- Control player (marker) - up, down, left and right
+- Collect all hearts (markers)
+
+
+*** Assignment 2 ****************************
+- Develop a Google Maps web app
+- Propose your own title
+- Must integrate:
+  (a) Vue
+  (b) Firebase - Cloud Firestore
+  (c) Google Maps JS API
+- Optional:
+  (a) Vue Router
+  (b) Firebase - Cloud Storage (Files/Images)
+  (c) Firebase - Authentication
+  (d) Others
+*********************************************
+
+
+Internet-found unrestricted keys:
+---------------------------------
+AIzaSyAwiV5R3XMsrVZKI6NuD7vY4BRqUt9yQQA
+AIzaSyBwaHyIsDZrPQVS2OTSks-s4sAsnvLu8tM
+AIzaSyAXxMfaMbJN-bUXfy6z02QF2AbjnrO5TJQ
+AIzaSyBS68AJSWAKGU0NXLFdfmtGKIbeExpUTUI
+AIzaSyCT1MkhTlOJjKg1NLqb0yyD_0o3Q6_-dr8
+AIzaSyCc4WNl0rXPzlg1g7A2ZjimnYLBS4s6qhA
+AIzaSyAIzmXkCIBFqi1EjiC3BFHEihb5aYj3RmY
+AIzaSyCBdwinhBxfD7cqHUCw9ja3vCwrUoSFsro
+AIzaSyBv_zaAzq9cGtg_U3_ezIEqJOmwGH-GyjM
+AIzaSyDz2uoI-By20D_wuU0fPHtQVXl_W1XhxN8
+AIzaSyAEPZMfQYbi9GPoO_Jy6Q1W9aocnTQiUYc
+
+
+
+

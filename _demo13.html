@@ -1,0 +1,200 @@
+﻿<style>
+    :root {
+        display: grid;
+    }
+
+    #map {
+        border: 1px solid #333;
+    }
+
+    #panel {
+        background-color: #fff;
+        border: 1px solid #999;
+        border-radius: 5px;
+        margin: 10px;
+        padding: 5px;
+        font-size: 16px;
+    }
+
+    #panel img {
+        width: 24px;
+    }
+
+    #panel * {
+        vertical-align: middle;
+    }
+
+    #step {
+        padding-top: 10px;
+        font-weight: bold;
+        font-size: larger;
+    }
+
+    #info {
+        font-size: 16px;
+        font-family: 'Roboto', sans-serif;
+        font-weight: normal; 
+    }
+</style>
+
+<template>
+    <main>
+        <div id="map"></div>
+
+        <template>
+            <div id="panel">
+                <table>
+                    <tr v-for="m of markers">
+                        <td><img :src="m.icon"></td>
+                        <td>{{ m.found ? "Found" : m.distance.toFixed() + " meters" }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" id="step">STEP = {{ step }}</td>
+                    </tr>
+                </table>
+            </div>
+        </template>
+    </main>
+</template>
+
+<script>
+    const DISTANCE = 1000; // Default half-diagonal distance (meter) of the boundary
+    const MOVEMENT = 5;    // Default movement distance (meter)
+
+    // TODO(8): Audio files
+    //          1.mp3 --> Reach boundary
+    //          2.mp3 --> Found a heart
+    //          3.mp3 --> Win
+    
+
+    app.component({
+        data: () => ({
+            player: null,
+            bounds: null,
+            markers: [],
+            win: false,
+            step: 0,
+        }),
+
+        methods: {
+            move(heading) {
+                // TODO(7): If heading is not undefined, increase step count
+                //          Move the player and pan the map
+                //          Prevent moving out of bounds
+                
+
+                // TODO(4A): Update marker's distance and visibility
+                
+
+                // TODO(9): If all markers (hearts) found, alert and reload
+                //          You found all hearts ❤️ in XXX steps!!!
+                
+            },
+        },
+
+        created() {
+            this.$root.title = 'Demo 13 : Mini Game';
+        },
+
+        mounted() {
+            // ================================================================
+            // Google Maps
+            // ================================================================
+
+            function computeBounds(center, distance) {
+                const sw = gm.geometry.spherical.computeOffset(center, distance, 225);
+                const ne = gm.geometry.spherical.computeOffset(center, distance, 45);
+                return new gm.LatLngBounds(sw, ne);
+            }
+
+            map = new gm.Map($('#map')[0], {
+                center,
+                zoom: 18,
+                disableDefaultUI: true,
+                clickableIcons: false,
+                fullscreenControl: true,
+                // TODO(1): Disable keyboard shortcuts 
+                
+                // TODO(10A): Disable gesture handling (zoom, pan, etc)
+                
+                // TODO(10B): Set restriction bounds
+                
+            });
+
+            const panel = $('#panel')[0];
+            panel.index = 0;
+            map.controls[gm.ControlPosition.TOP_LEFT].push(panel);
+
+            const player = new gm.Marker({
+                position: center,
+                map,
+                icon: 'image/player.gif',
+                animation: gm.Animation.DROP,
+            });
+            
+            this.player = player; // Vue data reference
+
+            // TODO(2A): Calculate bounds and draw rectangle
+            const bounds = new gm.LatLngBounds();
+
+            this.bounds = bounds; // Vue data reference
+
+            const rect = new gm.Rectangle({
+                map,
+                bounds,
+                strokeColor: 'red',
+                strokeWeight: 10,
+                fillOpacity: 0,
+                // TODO(2B): Make the rectangle non-clickable (different cursor)
+
+            });
+
+            gm.event.addListenerOnce(map, 'bounds_changed', e => {
+                const colors = ['red', 'green', 'blue'];
+
+                // TODO(3): Drop markers (hearts) on map within the bounds (random position)
+                
+
+                // Call move() to calculate initial distances
+                this.move();
+            });
+
+            const info = new gm.InfoWindow();
+
+            let timeout = null; // Timeout id
+
+            const addMarker = (position, color) => {
+                const m = new gm.Marker({
+                    map,
+                    position,
+                    icon: `image/h/${color}.png`,
+                    distance: 0,  // Custom property
+                    found: false, // Custom property
+                    color         // Custom property
+                });
+
+                m.addListener('click', e => {
+                    // TODO(5): Open info window for 3 seconds
+                    
+                });
+
+                this.markers.push(m);
+            };
+
+            // ================================================================
+
+            // TODO(6A): Handle keydown event, call move(heading) accordingly
+            //           e.key --> ArrowUp    = north (  0)
+            //                     ArrowRight = east  ( 90)
+            //                     ArrowDown  = south (180)
+            //                     ArrowLeft  = west  (270)
+            
+        },
+
+        unmounted() {
+            map = null;
+            // TODO(6B): Remove DOM event handlers
+
+        },
+    });
+</script>

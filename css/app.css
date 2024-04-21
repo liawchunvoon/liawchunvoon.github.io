@@ -1,0 +1,200 @@
+/***** Font *****/
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+body, input, textarea, select, button, label {
+    font-size: 16px;
+    font-family: 'Roboto', sans-serif;
+}
+
+/***** Layout *****/
+body {
+    margin: 0;
+    height: 100vh;
+}
+
+#app {
+    height: 100vh;
+    display: grid;
+    grid: auto auto 1fr auto / auto;
+}
+
+header, footer {
+    padding: 10px 10px;
+    background: #ccc;
+}
+
+header h1 {
+    margin: 0;
+    background: url(../image/favicon.png) no-repeat left center / 32px 32px;
+    padding-left: 40px;
+}
+
+header a {
+    text-decoration: none;
+    color: inherit;
+}
+
+nav {
+    padding: 0 10px;
+    background: #666;
+    display: flex;
+}
+
+nav a {
+    text-decoration: none;
+    color: #fff;
+    display: block;
+    padding: 5px 10px;
+    white-space: nowrap;
+}
+
+nav a:hover {
+    background: #333;
+}
+
+main {
+    padding: 10px;
+}
+
+main h1 {
+    margin: 0;
+    margin-bottom: 10px;
+}
+
+/***** Table *****/
+.table {
+    border-collapse: collapse;
+}
+
+.table th,
+.table td {
+    border: 1px solid #999;
+    padding: 5px;
+}
+
+.table th {
+    background: #666;
+    color: #fff;
+}
+
+.table tr:hover td {
+    background: #ccc;
+}
+
+th.asc::after {
+    content: ' ▴';
+}
+
+th.desc::after {
+    content: ' ▾';
+}
+
+/***** Form *****/
+.form {
+    display: grid;
+    grid: auto / auto auto;
+    gap: 5px;
+    place-content: start;
+    place-items: center start;
+}
+
+.form > label {
+    background: #ccc;
+    place-self: stretch;
+    padding: 2px 4px;
+    font-weight: bold;
+}
+
+.form > section {
+    grid-column: 1 / -1;
+}
+
+/***** Vue.js *****/
+[v-cloak] {
+    visibility: hidden;
+}
+
+/***** Transition: fade *****/
+.fade-enter-active,
+.fade-leave-active,
+.fade-move {
+    transition: 0.3s;
+} 
+
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+}
+
+/***** Transition: zoom *****/
+.zoom-enter-active,
+.zoom-leave-active,
+.zoom-move {
+    transition: 0.3s;
+} 
+
+.zoom-enter-from,
+.zoom-leave-to {
+    opacity: 0;
+    transform: scale(0.5);
+}
+
+/***** Transition: rotate *****/
+.rotate-enter-active,
+.rotate-leave-active,
+.rotate-move {
+    transition: 0.3s;
+} 
+
+.rotate-enter-from,
+.rotate-leave-to {
+    opacity: 0;
+    transform: scale(0.5) rotate(3turn);
+}
+
+/***** Transition: slide *****/
+.slide-enter-active,
+.slide-leave-active,
+.slide-move {
+    transition: 0.3s;
+} 
+
+.slide-enter-from,
+.slide-leave-to {
+    opacity: 0;
+    transform: translate(-100px, 0);
+}
+
+/***** Transition: slide-left *****/
+.slide-left-enter-active,
+.slide-left-leave-active {
+    transition: 0.3;
+}
+
+.slide-left-enter-form {
+    opacity: 0;
+    transform: translate(100px, 0);
+}
+
+.slide-left-leave-to {
+    opacity: 0;
+    transform: translate(-100px, 0);
+}
+
+/***** Transition: slide-right *****/
+.slide-right-enter-active,
+.slide-right-leave-active {
+    transition: 0.3s;
+}
+
+.slide-right-enter-from {
+    opacity: 0;
+    transform: translate(-100px, 0);
+}
+
+.slide-right-leave-to {
+    opacity: 0;
+    transform: translate(100px, 0);
+}
+
+/***** Custom *****/

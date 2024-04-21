@@ -1,0 +1,115 @@
+<style>
+    :root {
+        display: grid;
+        grid: auto / 200px 1fr;
+        gap: 10px;
+    }
+
+    table {
+        margin-bottom: 10px;
+    }
+
+    td:last-child {
+        width: 100%;
+    }
+
+    #map {
+        border: 1px solid #333;
+    }
+</style>
+
+<template>
+    <main>
+        <div>
+            <table class="table">
+                <tr><td>Latitude </td><td>{{ lat.toFixed(6) }}</td></tr>
+                <tr><td>Longitude</td><td>{{ lng.toFixed(6) }}</td></tr>
+                <tr><td>Accuracy </td><td>{{ acc.toFixed(3) }} m</td></tr>
+            </table>
+            <button @click="getLocation">Get Location</button>
+        </div>
+        <div id="map"></div>
+    </main>
+</template>
+
+<script>
+    app.component({
+        data: () => ({
+            lat: 0,
+            lng: 0,
+            acc: 0,
+            marker: null,
+        }),
+
+        methods: {
+            getLocation() {
+                // TODO(1): Get current position
+                // Options: - enableHighAccuracy: false (default), or true
+                //          - timeout: Infinity (default), or number (ms)
+                //          - maximumAge: 0 (default), or number (ms)
+                const options = {
+                    enableHighAccuracy: true,
+                };
+
+                navigator.geolocation.getCurrentPosition(
+                    this.success,
+                    this.fail,
+                    options
+                );
+            },
+            success(position) {
+                // TODO(2): Update output, marker and map
+                this.lat = position.coords.latitude;
+                this.lng = position.coords.longitude;
+                this.acc = position.coords.accuracy;
+
+                const p = new gm.LatLng(this.lat, this.lng);
+                this.marker.setPosition(p);
+                map.panTo(p);
+            },
+            fail(error) {
+                alert(`ERROR: (${error.code}) ${error.message}`);
+            },
+        },
+
+        created() {
+            this.$root.title = 'Demo 12 : HTML5 Geolocation';
+        },
+
+        mounted() {
+            // ================================================================
+            // Google Maps
+            // ================================================================
+
+            map = new gm.Map($('#map')[0], {
+                center,
+                zoom: 16,
+                disableDefaultUI: true,
+                disableDoubleClickZoom: true,
+                clickableIcons: false,
+                scaleControl: true,
+            });
+
+            this.marker = new gm.Marker({
+                map,
+                animation: gm.Animation.DROP,
+            });
+
+            // ================================================================
+
+            // TODO(3): Permissions API 
+            //          result.state = granted, prompt, denied
+
+            navigator.permissions.query({ name: 'geolocation' }).then(result => {
+                if (result.state == 'granted') {
+                    this.getLocation();
+                }
+            });
+
+        },
+
+        unmounted() {
+            map = null;
+        },
+    });
+</script>

@@ -3,9 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="shortcut icon" href="image/favicon.png">
+    <link rel="stylesheet" href="css/app.css">
+    <title>Google Maps JS API</title>
+    <style>
+        /* Hide Google Maps message box */
+        #map div:has(.dismissButton) {
+            display: none;
+        }
+    </style>
 </head>
 <body>
-    <h1>Hello World</h1>
+    <div id="app" v-cloak>
+        <header>
+            <h1><a href="/">{{ title }}</a></h1>
+        </header>
+
+        <nav>
+            <a href="#/index">Index</a>
+            <a>...</a>
+            <a href="#/demo12">Demo 12</a>
+            <a href="#/demo13">Demo 13</a>
+            <a>...</a>
+        </nav>
+
+        <router-view v-slot="{ Component }">
+            <transition name="slide" mode="out-in">
+                <component :is="Component">
+            </transition>
+        </router-view>
+    </div>
+
+    <!-- Add geometry & drawing library -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCBdwinhBxfD7cqHUCw9ja3vCwrUoSFsro&libraries=geometry,drawing"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/10.11.0/firebase-app-compat.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/10.11.0/firebase-firestore-compat.min.js"></script> 
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/10.11.0/firebase-auth-compat.min.js"></script>  -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/10.11.0/firebase-storage-compat.min.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.4.23/vue.global.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-router/4.3.2/vue-router.global.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.slim.min.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+        // Setup (Google Maps) ================================================
+        
+        const gm = google.maps;
+        const center = new gm.LatLng(3.215600, 101.728100); // [OR] { lat: 3.215600, lng: 101.728100 }
+        let map = null;
+        
+        // Setup (Firebase) ===================================================
+
+        // Intialize firebase app
+        firebase.initializeApp({
+            projectId: 'liaw-202401',
+        });
+
+        // Setup firebase firestore
+        const DB = firebase.firestore();
+        const MARKERS = DB.collection('markers');
+        const SHAPES = DB.collection('shapes');
+        let unsubscribe = null;
+
+        // Vue ================================================================
+
+        const router = VueRouter.createRouter({
+            history: VueRouter.createWebHashHistory(),
+            routes: [
+                { path: '/index' , component: load('index')  },
+                { path: '/demo12', component: load('demo12') },
+                { path: '/demo13', component: load('demo13') },
+                { path: '/:all(.*)', redirect: '/index' },
+            ],
+        });
+
+        const app = Vue.createApp({
+            data: () => ({
+                title: 'Untitled',
+            }),
+
+            watch: {
+                title() {
+                    document.title = this.title;
+                },
+            },
+        });
+
+        app.use(router);
+
+        app.directive('focus', {
+            mounted(el) {
+                el.focus();
+            },
+        });
+
+        const root = app.mount('#app');
+    </script>
 </body>
 </html>
